@@ -473,7 +473,7 @@
 <p>一阶段: 事物准备<br>二阶段: 资源提交/回滚</p>
 <p>三、分布式事物产品模块</p>
 <p>如下图所示，Seata 中有三大模块，分别是 TM、RM 和 TC。 其中 TM 和 RM 是作为 Seata 的客户端与业务系统集成在一起，TC 作为 Seata 的服务端独立部署。</p>
-<p>如图(<a href="https://github.com/xletme/xletme.github.io/medias/seata/seataAll.png">https://github.com/xletme/xletme.github.io/medias/seata/seataAll.png</a>)</p>
+<p>如图(<a href="https://github.com/xletme/xletme.github.io/blob/master/medias/seata/seataAll.png">https://github.com/xletme/xletme.github.io/blob/master/medias/seata/seataAll.png</a>)</p>
 <p>Seata执行流程:<br>    1.TM 开启分布式事务（TM 向 TC 注册全局事务记录）;<br>    2.按业务场景，编排数据库、服务等事务内资源(RM 向 TC 汇报资源准备状态) ;<br>    3.TM 结束分布式事务，事务一阶段结束(TM 通知 TC 提交/回滚分布式事务);<br>    4.TC 汇总事务信息，决定分布式事务是提交还是回滚;<br>    5.TC 通知所有 RM 提交/回滚 资源，事务二阶段结束.</p>
 <p>四、简单介绍下AT模式</p>
 <p>AT模式对业务无侵入;</p>
