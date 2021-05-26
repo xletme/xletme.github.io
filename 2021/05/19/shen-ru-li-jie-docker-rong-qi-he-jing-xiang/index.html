@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="seata 分布式事物学习, Blogs of Xletme">
+    <meta name="keywords" content="深入理解Docker 容器和镜像, Blogs of Xletme">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>seata 分布式事物学习 | Blogs of Xletme</title>
+    <title>深入理解Docker 容器和镜像 | Blogs of Xletme</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">seata 分布式事物学习</h1>
+                    <h1 class="description center-align post-title">深入理解Docker 容器和镜像</h1>
                 </div>
             </div>
         </div>
@@ -443,7 +443,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-05-18
+                    2021-05-19
                 </div>
                 
 
@@ -464,23 +464,47 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>参考链接: <a target="_blank" rel="noopener" href="http://seata.io/zh-cn/blog/seata-at-tcc-saga.html">http://seata.io/zh-cn/blog/seata-at-tcc-saga.html</a><br>一、分布式事物产生的背景</p>
-<p>随着业务数据的发展,单库单表无法满足业务需求,对数据库DB进行水平拆分成多个 DB -&gt; DB1 DB2 DB3</p>
-<p>业务系统拆分成多个  Service -&gt; service1 service2 service3</p>
-<p>一个完整的业务,需要调用多个服务,多个数据库落库,如果保证服务之间的数据一致性成为一个难题</p>
-<p>这就被成为分布式事物</p>
-<p>二、分布式事物两阶段协议</p>
-<p>一阶段: 事物准备<br>二阶段: 资源提交/回滚</p>
-<p>三、分布式事物产品模块</p>
-<p>如下图所示，Seata 中有三大模块，分别是 TM、RM 和 TC。 其中 TM 和 RM 是作为 Seata 的客户端与业务系统集成在一起，TC 作为 Seata 的服务端独立部署。</p>
-<p><img src="/medias/seata/seataAll.png"></p>
-<p>Seata执行流程:<br>    1.TM 开启分布式事务（TM 向 TC 注册全局事务记录）;<br>    2.按业务场景，编排数据库、服务等事务内资源(RM 向 TC 汇报资源准备状态) ;<br>    3.TM 结束分布式事务，事务一阶段结束(TM 通知 TC 提交/回滚分布式事务);<br>    4.TC 汇总事务信息，决定分布式事务是提交还是回滚;<br>    5.TC 通知所有 RM 提交/回滚 资源，事务二阶段结束.</p>
-<p>四、简单介绍下AT模式</p>
-<p>AT模式对业务无侵入;</p>
-<p>一阶段: Seata对业务sql进行拦截,找到sql要更新的数据,保留更新前的数据 before_image ,执行更新操作,<br>保留更新后的数据 after_image ,最后生成行锁,以上操作在一个事物内完成,保证其原子性</p>
-<p>二阶段提交: Seata框架只需删除 before_image after_image 行锁</p>
-<p>二阶段回滚:<br>1.正常情况,直接按照before_image 还原业务数据后,删除before_image after_image 行锁<br>2.异常情况,after_image 和此时数据库数据不一致(脏读),由开发人员解决</p>
-<p>另外Seata还有 TCC Saga模式,感兴趣的可以自行观看.<br>参考链接: <a target="_blank" rel="noopener" href="http://seata.io/zh-cn/blog/seata-at-tcc-saga.html">http://seata.io/zh-cn/blog/seata-at-tcc-saga.html</a></p>
+                <h1 id="理解-Docker-containers-and-images"><a href="#理解-Docker-containers-and-images" class="headerlink" title="理解 Docker containers and images"></a>理解 Docker containers and images</h1><h2 id="这篇文章详细的介绍container与images之间的关系-下面是概括图"><a href="#这篇文章详细的介绍container与images之间的关系-下面是概括图" class="headerlink" title="这篇文章详细的介绍container与images之间的关系 ,下面是概括图"></a>这篇文章详细的介绍container与images之间的关系 ,下面是概括图</h2><p><img src="/medias/docker/containerAndImage/1.png">  </p>
+<hr>
+<p>##1. image(镜像定义) : 镜像（Image）就是一堆只读层（read-only layer）的统一视角,请看下面图片  </p>
+<p><img src="/medias/docker/containerAndImage/2.png">  </p>
+<p>从左边我们看到了多个只读层，它们重叠在一起。除了最下面一层，其它层都会有一个指针指向下一层。这些层是Docker内部的实现细节，并且能够在主机（译者注：运行Docker的机器）的文件系统上访问到。统一文件系统（union file system）技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一的视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。我们可以在图片的右边看到这个视角的形式  </p>
+<p>下图是我机器上的目录 images下是镜像id,container文件下里面是containerID<br><img src="/medias/docker/containerAndImage/3.jpg"> </p>
+<hr>
+<p>##2. container定义 : 容器（container）的定义和镜像（image）几乎一模一样，也是一堆层的统一视角，唯一区别在于容器的最上面那一层是可读可写的。  </p>
+<p> <img src="/medias/docker/containerAndImage/4.png"> </p>
+<p> **要点：容器 = 镜像 + 读写层。并且容器的定义并没有提及是否要运行容器.**  </p>
+<p>##3. 运行时容器定义 : 一个运行态容器（running container）被定义为一个可读写的统一文件系统加上隔离的进程空间和包含其中的进程。下面这张图片展示了一个运行中的容器.</p>
+<p> <img src="/medias/docker/containerAndImage/5.png"><br>##4. 镜像层定义 : 为了将零星的数据整合起来，我们提出了镜像层（image layer）这个概念。</p>
+<p><img src="/medias/docker/containerAndImage/6.png"> </p>
+<p><u>元数据（metadata）就是关于这个层的额外信息，它不仅能够让Docker获取运行和构建时的信息，还包括父层的层次信息。需要注意，只读层和读写层都包含元数据。</u>   </p>
+<p><img src="/medias/docker/containerAndImage/7.png"><br><em><strong>每一层都包括了一个指向父层的指针</strong></em></p>
+<p><img src="/medias/docker/containerAndImage/8.png"> </p>
+<p>##5. 创建docker过程 </p>
+<blockquote>
+<ol>
+<li>docker create + docker start<br>docker create <image-id><br><img src="/medias/docker/containerAndImage/9.png"><br><img src="/medias/docker/containerAndImage/10.png"> </li>
+</ol>
+</blockquote>
+<blockquote>
+<p>docker start <container-id><br> <img src="/medias/docker/containerAndImage/11.png"><br>2. docker run<br><img src="/medias/docker/containerAndImage/12.png"><br>3. docker run = docker create + docker start 类似 git pull = git fetch + git merge<br><img src="/medias/docker/containerAndImage/13.png">  </p>
+</blockquote>
+<hr>
+<p>##6. docker ps -a : docker ps –a命令会列出所有的容器，不管是运行的，还是停止的。  </p>
+<p><img src="/medias/docker/containerAndImage/14.png">  </p>
+<p>##7. docker image -a : docker images –a命令列出了所有的镜像，也可以说是列出了所有的可读层。如果你想要查看某一个image-id下的所有层，可以使用docker history来查看.  </p>
+<p><img src="/medias/docker/containerAndImage/15.png">  </p>
+<p>##8. docker stop <container-id></p>
+<p><img src="/medias/docker/containerAndImage/16.png"></p>
+<p>##9. docker kill <container-id>  </p>
+<p><img src="/medias/docker/containerAndImage/17.png"></p>
+<p>##10. docker pause <container-id>  </p>
+<p><img src="/medias/docker/containerAndImage/18.png"></p>
+<p>##11. docker commit <container-id>  </p>
+<p><img src="/medias/docker/containerAndImage/19.png"></p>
+<p>##12. docker build </p>
+<p><img src="/medias/docker/containerAndImage/20.png"><br><img src="/medias/docker/containerAndImage/21.png"></p>
+<p>原文链接 : <a target="_blank" rel="noopener" href="http://merrigrove.blogspot.com/2015/10/visualizing-docker-containers-and-images.html">docker详解 container 和 image</a>  </p>
 
                 
             </div>
@@ -507,7 +531,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://github.com/xletme/xletme.github.io/2021/05/18/seata-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E7%89%A9%E5%AD%A6%E4%B9%A0/">https://github.com/xletme/xletme.github.io/2021/05/18/seata-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E7%89%A9%E5%AD%A6%E4%B9%A0/</a>
+                    <a href="https://github.com/xletme/xletme.github.io/2021/05/19/shen-ru-li-jie-docker-rong-qi-he-jing-xiang/">https://github.com/xletme/xletme.github.io/2021/05/19/shen-ru-li-jie-docker-rong-qi-he-jing-xiang/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -712,11 +736,12 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/05/19/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Docker-%E5%AE%B9%E5%99%A8%E5%92%8C%E9%95%9C%E5%83%8F/">
+                <a href="/2021/05/19/shen-ru-li-jie-docker-rong-qi-he-jing-xiang/">
                     <div class="card-image">
                         
                         
@@ -732,9 +757,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-05-19
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-19
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -743,6 +768,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -753,13 +779,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/05/17/leetCode-gcdOfString/">
+                <a href="/2021/05/18/seata-fen-bu-shi-shi-wu-xue-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="leetCode--gcdOfString">
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="seata 分布式事物学习">
                         
-                        <span class="card-title">leetCode--gcdOfString</span>
+                        <span class="card-title">seata 分布式事物学习</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -770,7 +796,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-17
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-18
                             </span>
                         <span class="publish-author">
                             
